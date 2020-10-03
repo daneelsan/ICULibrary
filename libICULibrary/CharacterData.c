@@ -1,4 +1,4 @@
-#include "WolframLibrary.h"
+#include "CharacterData.h"
 
 //#include <string.h>
 #include <unicode/uchar.h>
@@ -178,7 +178,7 @@ DLLEXPORT int icuCharacterIntProperty(
 	return LIBRARY_NO_ERROR;
 }
 
-EXTERN_C DLLEXPORT int icuCharacterIntNameProperty(
+DLLEXPORT int icuCharacterIntNameProperty(
 		WolframLibraryData libData, mint argc,
 		MArgument *args, MArgument res)
 {
