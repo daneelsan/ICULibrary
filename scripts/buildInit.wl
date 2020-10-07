@@ -41,6 +41,7 @@ buildLibICULibrary[] := With[{
 	If[!StringQ[CreateLibrary[
 			FileNames["*.c", {libICULibrarySource}],
 			"libICULibrary",
+			"Libraries" -> {"icudata", "icuuc", "icui18n", "icuio", "icutu"},
 			"CleanIntermediate" -> True,
 			"CompileOptions" -> Switch[$OperatingSystem,
 				"Windows", {"/std:c11", "/EHsc"},
