@@ -6,7 +6,7 @@
 #include <unicode/uversion.h>
 
 // Gets the Unicode version information.
-DLLEXPORT int getUnicodeVersion(
+EXTERN_C int getUnicodeVersion(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UVersionInfo versionArray; // array of 4 uint8_t
@@ -33,7 +33,7 @@ DLLEXPORT int getUnicodeVersion(
 static char icuNameBuff[MAX_ICUNAME_LEN + 1] = "\0";
 
 // Retrieve the name of a Unicode character.
-DLLEXPORT int characterName(
+EXTERN_C int characterName(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	mint nameLen;
@@ -66,7 +66,7 @@ DLLEXPORT int characterName(
 }
 
 // Get the "age" of the code point.
-DLLEXPORT int characterAge(
+EXTERN_C int characterAge(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -92,7 +92,7 @@ DLLEXPORT int characterAge(
 }
 
 // Get the numeric value for a Unicode code point as defined in the Unicode Character Database.
-DLLEXPORT int characterNumericValue(
+EXTERN_C int characterNumericValue(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -110,7 +110,7 @@ DLLEXPORT int characterNumericValue(
 }
 
 // Check a binary Unicode property for a code point.
-DLLEXPORT int characterBinaryProperty(
+EXTERN_C int characterBinaryProperty(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -131,7 +131,7 @@ DLLEXPORT int characterBinaryProperty(
 }
 
 // Get the property value for an enumerated or integer Unicode property for a code point.
-DLLEXPORT int characterIntPropertyValue(
+EXTERN_C int characterIntPropertyValue(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -150,7 +150,7 @@ DLLEXPORT int characterIntPropertyValue(
 	return LIBRARY_NO_ERROR;
 }
 
-DLLEXPORT int characterIntPropertyValueName(
+EXTERN_C int characterIntPropertyValueName(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -177,7 +177,7 @@ DLLEXPORT int characterIntPropertyValueName(
 	return LIBRARY_NO_ERROR;
 }
 
-DLLEXPORT int characterCharProperty(
+EXTERN_C int characterCharProperty(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -219,7 +219,7 @@ DLLEXPORT int characterCharProperty(
 }
 
 /*
-DLLEXPORT int icuCharacterJavaTestProperty(
+EXTERN_C int icuCharacterJavaTestProperty(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -263,7 +263,7 @@ static JavaTest JavaTestFunctions[15] = {
 	u_isMirrored, u_istitle, u_isupper
 };
 
-DLLEXPORT int characterJavaTestProperty(
+EXTERN_C int characterJavaTestProperty(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -296,7 +296,7 @@ static CPOSIXTest CPOSIXTestFunctions[12] = {
 	u_isspace, u_isupper, u_isxdigit
 };
 
-DLLEXPORT int characterCPOSIXTestProperty(
+EXTERN_C int characterCPOSIXTestProperty(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -319,7 +319,7 @@ DLLEXPORT int characterCPOSIXTestProperty(
 	return LIBRARY_NO_ERROR;
 }
 
-DLLEXPORT int characterWhitespaceTestProperty(
+EXTERN_C int characterWhitespaceTestProperty(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -358,7 +358,7 @@ static ICUTest ICUTestFunctions[28] = {
 	u_isUUppercase, u_isUWhiteSpace, u_isWhitespace, u_isxdigit
 };
 
-DLLEXPORT int characterICUTestProperty(
+EXTERN_C int characterICUTestProperty(
 	WolframLibraryData libData, mint argc, MArgument *args, MArgument res)
 {
 	UChar32 c;
@@ -382,17 +382,17 @@ DLLEXPORT int characterICUTestProperty(
 }
 
 // Boilerplate.
-DLLEXPORT void WolframLibrary_uninitialize(WolframLibraryData libData)
+EXTERN_C void WolframLibrary_uninitialize(WolframLibraryData libData)
 {
 	return;
 }
 
-DLLEXPORT int WolframLibrary_initialize(WolframLibraryData libData)
+EXTERN_C int WolframLibrary_initialize(WolframLibraryData libData)
 {
 	return 0;
 }
 
-DLLEXPORT mint WolframLibrary_getVersion(void)
+EXTERN_C mint WolframLibrary_getVersion(void)
 {
 	return WolframLibraryVersion;
 }
