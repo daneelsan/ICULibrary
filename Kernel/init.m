@@ -2,7 +2,7 @@ Unprotect["ICULibrary`*"];
 
 ClearAll @@ (# <> "*" & /@ Contexts["ICULibrary`*"]);
 
-Get["ICULibraryReplace`Kernel`usageString`"];
+Get["ICULibrary`Kernel`usageString`"];
 
 SetAttributes[#, {Protected, ReadProtected}] & /@ Evaluate @ Names @ "ICULibrary`*";
 

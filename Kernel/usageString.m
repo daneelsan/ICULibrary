@@ -1,4 +1,4 @@
-Package["SetReplace`"]
+Package["ICULibrary`"]
 
 PackageScope["usageString"]
 
