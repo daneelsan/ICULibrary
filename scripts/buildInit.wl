@@ -1,3 +1,5 @@
+(* ::Package:: *)
+
 Needs["CCompilerDriver`"];
 Needs["PacletManager`"];
 
@@ -37,7 +39,7 @@ buildLibICULibrary[] := With[{
 	},
 	If[$internalBuildQ, Off[CreateLibrary::wddirty]];
 	If[!StringQ[CreateLibrary[
-			FileNames["*.cpp", {libICULibrarySource}],
+			FileNames["*.c", {libICULibrarySource}],
 			"libICULibrary",
 			"CleanIntermediate" -> True,
 			"CompileOptions" -> Switch[$OperatingSystem,

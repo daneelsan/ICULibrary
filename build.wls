@@ -10,7 +10,7 @@ Check[
 $success = True;
 
 Check[
-	buildLibSetReplace[];,
+	buildLibICULibrary[];,
 
 	$success = False;
 ];
