@@ -4,10 +4,6 @@
 Off[CloudConnect::clver];
 
 << ICULibrary`;
-(* Launch kernels preemptively to avoid "Launching kernels..." interrupting test log *)
-CloseKernels[];
-LaunchKernels[];
-ParallelEvaluate[<< ICULibrary`];
 
 $successQ = True;
 
@@ -46,7 +42,7 @@ removeHoldFormFromInputString[input_String] := StringReplace[
 ];
 
 $results = Association[KeyValueMap[Function[{testGroupName, testGroup}, Module[{
-    testList, testResults, testReport, options, parallelQ, runInit, failedTests},
+    testList, testResults, testReport, options, runInit, failedTests},
   (* Notify the user which test group we are running *)
   WriteString["stdout",
     testGroupName,
@@ -54,18 +50,15 @@ $results = Association[KeyValueMap[Function[{testGroupName, testGroup}, Module[{
 
   (* Read options *)
   options = Association[ReleaseHold[Lookup[testGroup, "options", <||>]]];
-  parallelQ = Lookup[options, "Parallel", True];
 
   (* Run init, changing VerificationTest to test in all definitions *)
   runInit[] := ReleaseHold[testGroup["init"] /. VerificationTest -> constrainedTest];
   runInit[];
-  If[parallelQ, ParallelEvaluate[runInit[]]];
 
   (* Make a list of tests, but don't run them yet *)
   testList = Flatten[ReleaseHold[testGroup["tests"] /. VerificationTest -> constrainedTest]];
 
-  (* Run tests in parallel *)
-  testResults = If[parallelQ, ParallelMap, Map][# /. test -> VerificationTest &, testList];
+  testResults = Map[# /. test -> VerificationTest &, testList];
   testReport = TestReport[testResults];
 
   $redColor = "\033[0;31m";
