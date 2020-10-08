@@ -17,30 +17,67 @@ CharacterData::usage = usageString[
 
 
 SyntaxInformation[CharacterData] = {
-	"ArgumentsPattern" -> {_, _., _.}};
+	"ArgumentsPattern" -> {_, _, _.}};
 
 
 CharacterData[args___] := 0 /;
-	!Developer`CheckArgumentCount[CharacterData[args], 1, 3] && False
+	!Developer`CheckArgumentCount[CharacterData[args], 2, 3] && False
 
 
-expr : CharacterData[args__] := With[{res = Catch[iCharacterData[HoldForm@expr, args], $tag]},
-	res /; res =!= $unevaluated];
+expr : CharacterData[args__] := With[{res = Catch[iCharacterData[HoldForm @ expr, args], $$tag]},
+	res /; res =!= $$unevaluated]
 
 
-(* ::Subsubsection::Closed:: *)
-(*tags*)
+(* constants*)
+
+$CharacterCodeMinValue = 0;
+$CharacterCodeMaxValue = 16^^10ffff;
 
 
-$tag = "CharacterDataCatchThrowTag";
-$unevaluated = "CharacterDataUnevaluatedTag";
+(* Catch/Throw tags *)
+
+$$tag = "CharacterDataCatchThrowTag";
+$$unevaluated = "CharacterDataUnevaluatedTag";
 
 
-(* ::Subsubsection:: *)
-(*$characterProperties*)
+(* Error messages *)
+
+CharacterData::errchar = "The argument at position 1 in `1` should either be an integer between 0 and 1114111, \
+a character (string of length 1) or a list of these values.";
+
+CharacterData::errprop = "The argument at position 2 in `1` is not a member of CharacterData[All, \"Properties\"].";
+
+CharacterData::errsprop = "The argument at position 3 in `1` is neither Automatic, \"Date\", \"Name\" nor \"ShortName\".";
 
 
-$characterProperties = {
+(* ::Subsection::Closed:: *)
+(*arguments*)
+
+
+(* character *)
+
+validCharacterCodeQ = ($CharacterCodeMinValue <= # <= $CharacterCodeMaxValue &);
+
+validCharacterCodePattern = _Integer ? validCharacterCodeQ;
+
+validCharacterCodesPattern = {___Integer} ? (AllTrue[#, validCharacterCodeQ]&);
+
+validCharacterQ = (StringQ[#] && StringLength[#] === 1)&;
+
+validCharacterPattern = _String ? validCharacterQ;
+
+validCharactersPattern = {___String} ? (AllTrue[#, validCharacterQ]&);
+
+validFirstArgumentPattern = Alternatives[
+	validCharacterCodePattern,
+	validCharacterCodesPattern,
+	validCharacterPattern,
+	validCharactersPattern];
+
+
+(* property *)
+
+$validCharacterProperties = {
 	"BaseCharQ",
 	"Block",
 	"BMPCharQ",
@@ -76,65 +113,124 @@ $characterProperties = {
 	"UpperCaseQ",
 	"WhitespaceQ"};
 
-$characterPropertiesPattern := $characterPropertiesPattern = Alternatives @@ $characterProperties;
+validCharacterPropertyPattern := validCharacterPropertyPattern = Alternatives @@ $validCharacterProperties;
 
 
-(*$characterExtraPropertiesPattern = "ICUVersion" | "UnicodeVersion" | "UnicodeVersions" | "Properties";*)
+(* sub-property *)
+
+$validCharacterSubProperties = {Automatic, "Date", "Name", "ShortName"};
+
+validCharacterSubPropertyPattern := validCharacterSubPropertyPattern = Alternatives @@ $validCharacterSubProperties;
 
 
-(* ::Subsubsection::Closed:: *)
-(*Messages*)
-
-
-CharacterData::arg1 = "The argument at position 1 in `1` should be an integer between 0 and 1114111 or a string of length 1.";
-CharacterData::errprop = "The property or properties at position 2 in `1` should be in CharacterData[\"Properties\"].";
-
-
-(* ::Subsubsection:: *)
+(* ::Subsection:: *)
 (*iCharacterData*)
 
 
-iCharacterData[_, "UnicodeVersion"] :=
-	CurrentUnicodeVersion[];
+(*iCharacterData[_, "CurrentUnicodeVersion"] :=
+	CurrentUnicodeVersion[]
 
 iCharacterData[_, "ICUVersion"] :=
-	"67.1";
+	"67.1"*)
 
-iCharacterData["Properties"] :=
-	Sort@$characterProperties;
+(*iCharacterData[_, "UnicodeVersions"] :=
+	Dataset[<|"Version" -> #1, "Date" -> #2|> &@@@ $UnicodeVersionMap]*)
 
-iCharacterData["UnicodeVersions"] :=
-	Dataset[<|"Version" -> #1, "Date" -> #2|> &@@@ $UnicodeVersionMap];
+iCharacterData[h_, All, "Properties"] :=
+	Sort @ $validCharacterProperties
 
 
-iCharacterData[h_, x_, props : {$characterPropertiesPattern..}] :=
-	iCharacterData[h, x, #] &/@ props;
+iCharacterData[
+	h_,
+	cp : validCharacterCodePattern,
+	prop : validCharacterPropertyPattern] :=
+	characterData$c[cp, {prop, Automatic}]
 
-iCharacterData[h_, x_, props_List] :=
+iCharacterData[
+	h_,
+	cp : validCharacterCodePattern,
+	prop : validCharacterPropertyPattern,
+	sub : validCharacterSubPropertyPattern] :=
+	characterData$c[cp, {prop, sub}]
+
+
+iCharacterData[
+	h_,
+	cps : validCharacterCodesPattern,
+	prop : validCharacterPropertyPattern] :=
+	characterData$c[#, {prop, Automatic}] & /@ cps
+
+iCharacterData[
+	h_,
+	cps : validCharacterCodesPattern,
+	prop : validCharacterPropertyPattern,
+	sub : validCharacterSubPropertyPattern] :=
+	characterData$c[#, {prop, sub}] & /@ cps
+
+
+iCharacterData[
+	h_,
+	ch : validCharacterPattern,
+	prop : validCharacterPropertyPattern] :=
+	characterData$c[First@ToCharacterCode[ch], {prop, Automatic}]
+
+iCharacterData[
+	h_,
+	ch : validCharacterPattern,
+	prop : validCharacterPropertyPattern,
+	sub : validCharacterSubPropertyPattern] :=
+	characterData$c[First@ToCharacterCode[ch], {prop, sub}]
+
+
+iCharacterData[
+	h_,
+	ch : validCharactersPattern,
+	prop : validCharacterPropertyPattern] :=
+	characterData$c[#, {prop, Automatic}] & /@ Flatten[ToCharacterCode[ch]]
+
+iCharacterData[
+	h_,
+	ch : validCharactersPattern,
+	prop : validCharacterPropertyPattern,
+	sub : validCharacterSubPropertyPattern] :=
+	characterData$c[#, {prop, sub}] & /@ Flatten[ToCharacterCode[ch]]
+
+
+(*iCharacterData[
+	h_,
+	str_String?StringQ,
+	prop : validCharacterPropertyPattern] :=
+	characterData$c[#, {prop, Automatic}]& /@ ToCharacterCode[str]
+
+iCharacterData[
+	h_,
+	str_String?StringQ,
+	prop : validCharacterPropertyPattern,
+	sub : validCharacterSubPropertyPattern] :=
+	characterData$c[#, {prop, sub}]& /@ ToCharacterCode[str]*)
+
+
+iCharacterData[
+	h_,
+	chr : validFirstArgumentPattern,
+	props : {Alternatives[
+		validCharacterPropertyPattern,
+		{validCharacterPropertyPattern,
+		_}] ..}] :=
+	iCharacterData[Unevaluated @ h, chr, Replace[#, {x_, y_} :> Sequence[x, y]]] & /@ props
+
+
+iCharacterData[h_, ch_ , args___] /; !MatchQ[ch, validFirstArgumentPattern]:=
+	(Message[CharacterData::errchar, h];
+	Throw[$$unevaluated, $$tag])
+
+iCharacterData[h_, _ , prop_, args___] /; !MatchQ[prop, validCharacterPropertyPattern]:=
 	(Message[CharacterData::errprop, h];
-	Throw[$unevaluated, $tag]);
+	Throw[$$unevaluated, $$tag])
 
+iCharacterData[h_, _ , _, sprop_] /; !MatchQ[sprop, validCharacterSubPropertyPattern]:=
+	(Message[CharacterData::errsprop, h];
+	Throw[$$unevaluated, $$tag])
 
-iCharacterData[h_, cp_Integer, prop : $characterPropertiesPattern, args___] :=
-	If[0 <= cp <= 16^^10FFFF,
-		characterData$c[cp, prop, args],
-		Message[CharacterData::arg1, h];
-		Throw[$unevaluated, $tag]
-	];
-
-
-iCharacterData[h_, ch_String, prop : $characterPropertiesPattern, args___] :=
-	If[StringLength[ch] === 1,
-		characterData$c[First@ToCharacterCode[ch], prop, args],
-		Message[CharacterData::arg1, h];
-		Throw[$unevaluated, $tag]
-	];
-
-
-iCharacterData[h_, _, prop_] := 
-	(Message[CharacterData::errprop, h];
-	Throw[$unevaluated, $tag]);
-
-
-iICUCharacterData[args___] :=
-	(Throw[$unevaluated, $tag]);
+iCharacterData[args___] :=
+	Throw[$$unevaluated, $$tag]
