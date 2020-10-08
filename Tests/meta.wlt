@@ -41,9 +41,6 @@
             FileNameJoin[Append[FileNameSplit @ testsDirectory, "*.wlt"]],
             "Text"]], #] &]
       ]]
-    },
-    "options" -> {
-      "Parallel" -> False
     }
   |>
 |>

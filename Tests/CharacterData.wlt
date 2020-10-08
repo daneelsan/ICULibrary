@@ -167,7 +167,7 @@
       VerificationTest[
         CharacterData[CharacterRange["a", "c"], {{"LetterQ", Automatic}, "LetterQ", "UpperCase"}],
         {{True, True, True}, {True, True, True}, {"A", "B", "C"}}
-      ]
+      ],
 
       (* Properties *)
 
@@ -492,9 +492,7 @@
         CharacterData[32, "WhiteSpaceQ"],
         True
       ]
-    },
-    "options" -> {
-      "Parallel" -> False
+
     }
   |>
 |>
