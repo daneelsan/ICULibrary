@@ -250,132 +250,168 @@ $c$CharacterPropertiesEnum = <|
 	"OTHER_PROPERTY_LIMIT" -> 28673|>|>;
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*utilities*)
 
 
+validNameSubPattern = Automatic | "Date" | "Name" | "ShortName";
+
 nameChoice["ShortName"] = 0;
 nameChoice["Name"] = 1;
-nameChoice[_] := 1;
-
+nameChoice[Automatic] = 1;
 
 cleanResult[""] = Missing["NotAvailable"];
 cleanResult[-1.23456789`*^8] = Missing["NotApplicable"];
-cleanResult[x_] := x;
+cleanResult[x_] := x
 
 
 (* ::Subsubsection:: *)
 (*characterData$c*)
 
 
-characterData$c[ch_, "BaseCharQ", ___] :=
+characterData$c[ch_, {"BaseCharQ", Automatic}] :=
 	$c$characterICUTestProperty[ch, 2];
 	
-characterData$c[ch_, "Block", name_ : "Name"] :=
-	$c$characterIntPropertyValueName[ch, $c$CharacterPropertiesEnum["BLOCK"], nameChoice[name]];
+characterData$c[ch_, {"Block", sub : validNameSubPattern}] :=
+	$c$characterIntPropertyValueName[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["BLOCK"],
+		nameChoice @ sub]
 	
-characterData$c[ch_, "BMPCharQ", ___] :=
-	0 <= ch <= 16^^FFFF;
+characterData$c[ch_, {"BMPCharQ", Automatic}] :=
+	0 <= ch <= 16^^FFFF
 
-characterData$c[ch_, "CombiningClass", name_ : "Name"] :=
-	$c$characterIntPropertyValueName[ch, $c$CharacterPropertiesEnum["CANONICAL_COMBINING_CLASS"], nameChoice[name]];
+characterData$c[ch_, {"CombiningClass", sub : validNameSubPattern}] :=
+	$c$characterIntPropertyValueName[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["CANONICAL_COMBINING_CLASS"],
+		nameChoice @ sub]
 
-characterData$c[ch_, "DefinedQ", ___] :=
-	$c$characterJavaTestProperty[ch, 2];
+characterData$c[ch_, {"DefinedQ", Automatic}] :=
+	$c$characterJavaTestProperty[ch, 2]
 
-characterData$c[ch_, "DigitQ", ___] :=
-	$c$characterJavaTestProperty[ch, 3];
+characterData$c[ch_, {"DigitQ", Automatic}] :=
+	$c$characterJavaTestProperty[ch, 3]
 
-characterData$c[ch_, "Direction", name_ : "Name"] :=
-	$c$characterIntPropertyValueName[ch, $c$CharacterPropertiesEnum["BIDI_CLASS"], nameChoice[name]];
+characterData$c[ch_, {"Direction", sub : validNameSubPattern}] :=
+	$c$characterIntPropertyValueName[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["BIDI_CLASS"],
+		nameChoice @ sub]
 
-characterData$c[ch_, "ExtendedName", ___] :=
-	$c$characterName[ch, 2];
+characterData$c[ch_, {"ExtendedName", Automatic}] :=
+	$c$characterName[ch, 2]
 
-characterData$c[ch_, "FoldCase", ___] :=
-	FromCharacterCode[$c$characterCharProperty[ch, $c$CharacterPropertiesEnum["SIMPLE_CASE_FOLDING"]]];
+characterData$c[ch_, {"FoldCase", Automatic}] :=
+	FromCharacterCode @ $c$characterCharProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["SIMPLE_CASE_FOLDING"]]
 
-characterData$c[ch_, "GeneralCategory", name_ : "Name"] :=
-	$c$characterIntPropertyValueName[ch, $c$CharacterPropertiesEnum["GENERAL_CATEGORY"], nameChoice[name]];
+characterData$c[ch_, {"GeneralCategory", sub : validNameSubPattern}] :=
+	$c$characterIntPropertyValueName[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["GENERAL_CATEGORY"],
+		nameChoice @ sub]
 
-characterData$c[ch_, "IlegalQ", ___] :=
-	$c$characterBinaryProperty[ch, $c$CharacterPropertiesEnum["NONCHARACTER_CODE_POINT"]];
+characterData$c[ch_, {"IlegalQ", Automatic}] :=
+	$c$characterBinaryProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["NONCHARACTER_CODE_POINT"]]
 
-characterData$c[ch_ ,"ISOControlQ", ___] :=
-	$c$characterJavaTestProperty[ch, 7];
+characterData$c[ch_, {"ISOControlQ", Automatic}] :=
+	$c$characterJavaTestProperty[ch, 7]
 
-characterData$c[ch_, "LetterDigitQ", ___] :=
-	$c$characterJavaTestProperty[ch,0];
+characterData$c[ch_, {"LetterDigitQ", Automatic}] :=
+	$c$characterJavaTestProperty[ch, 0]
 
-characterData$c[ch_, "LetterQ", ___] :=
-	$c$characterJavaTestProperty[ch, 1];
+characterData$c[ch_, {"LetterQ", Automatic}] :=
+	$c$characterJavaTestProperty[ch, 1]
 
-characterData$c[ch_, "LowerCase", ___] :=
-	FromCharacterCode[$c$characterCharProperty[ch, $c$CharacterPropertiesEnum["SIMPLE_LOWERCASE_MAPPING"]]];
+characterData$c[ch_, {"LowerCase", Automatic}] :=
+	FromCharacterCode @ $c$characterCharProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["SIMPLE_LOWERCASE_MAPPING"]]
 
-characterData$c[ch_, "LowerCaseQ", ___] :=
-	$c$characterJavaTestProperty[ch, 11];
+characterData$c[ch_, {"LowerCaseQ", Automatic}] :=
+	$c$characterJavaTestProperty[ch, 11]
 
-characterData$c[ch_, "Mirror", ___] :=
-	FromCharacterCode[$c$characterCharProperty[ch, $c$CharacterPropertiesEnum["BIDI_MIRRORING_GLYPH"]]];
+characterData$c[ch_, {"Mirror", Automatic}] :=
+	FromCharacterCode @ $c$characterCharProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["BIDI_MIRRORING_GLYPH"]]
 
-characterData$c[ch_,"MirroredQ", ___] :=
-	$c$characterJavaTestProperty[ch, 12];
+characterData$c[ch_, {"MirroredQ", Automatic}] :=
+	$c$characterJavaTestProperty[ch, 12]
 
-characterData$c[ch_, "Name", ___] :=
-	cleanResult[$c$characterName[ch, 0]];
+characterData$c[ch_, {"Name", Automatic}] :=
+	cleanResult @ $c$characterName[ch, 0]
 
-characterData$c[ch_, "NameAlias", ___] :=
-	cleanResult[$c$characterName[ch, 3]];
+characterData$c[ch_, {"NameAlias", Automatic}] :=
+	cleanResult @ $c$characterName[ch, 3]
 
-characterData$c[ch_, "NumericValue", ___] :=
-	cleanResult[$c$characterNumericValue[ch]];
+characterData$c[ch_, {"NumericValue", Automatic}] :=
+	cleanResult @ $c$characterNumericValue[ch]
 
-characterData$c[ch_, "PairedBracket", ___] :=
-	FromCharacterCode[$c$characterCharProperty[ch, $c$CharacterPropertiesEnum["BIDI_PAIRED_BRACKET"]]];
+characterData$c[ch_, {"PairedBracket", Automatic}] :=
+	FromCharacterCode @ $c$characterCharProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["BIDI_PAIRED_BRACKET"]]
 
-characterData$c[ch_, "PrintableQ", ___] :=
-	$c$characterCPOSIXTestProperty[ch, 7];
+characterData$c[ch_, {"PrintableQ", Automatic}] :=
+	$c$characterCPOSIXTestProperty[ch, 7]
 
-characterData$c[ch_, "Script", name_ : "Name"] :=
-	$c$characterIntPropertyValueName[ch, $c$CharacterPropertiesEnum["SCRIPT"], nameChoice[name]];
+characterData$c[ch_, {"Script", sub : validNameSubPattern}] :=
+	$c$characterIntPropertyValueName[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["SCRIPT"],
+		nameChoice @ sub]
 
-characterData$c[ch_, "SupplementaryCharQ", ___] :=
-	16^^00FFFF < ch <= 16^^10FFFF;
+characterData$c[ch_, {"SupplementaryCharQ", Automatic}] :=
+	16^^00FFFF < ch <= 16^^10FFFF
 
-characterData$c[ch_, "TitleCase", ___] :=
-	FromCharacterCode[$c$characterCharProperty[ch, $c$CharacterPropertiesEnum["SIMPLE_TITLECASE_MAPPING"]]];
+characterData$c[ch_, {"TitleCase", Automatic}] :=
+	FromCharacterCode @ $c$characterCharProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["SIMPLE_TITLECASE_MAPPING"]]
 
-characterData$c[ch_, "TitleCaseQ", ___] :=
-	$c$characterJavaTestProperty[ch, 2];
+characterData$c[ch_, {"TitleCaseQ", Automatic}] :=
+	$c$characterJavaTestProperty[ch, 2]
 
-characterData$c[ch_, "UnicodeAlphabeticQ", ___] :=
-	$c$characterBinaryProperty[ch, $c$CharacterPropertiesEnum["ALPHABETIC"]];
+characterData$c[ch_, {"UnicodeAlphabeticQ", Automatic}] :=
+	$c$characterBinaryProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["ALPHABETIC"]]
 
-characterData$c[ch_, "UnicodeLowerCaseQ", ___] :=
-	$c$characterBinaryProperty[ch, $c$CharacterPropertiesEnum["LOWERCASE"]];
+characterData$c[ch_, {"UnicodeLowerCaseQ", Automatic}] :=
+	$c$characterBinaryProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["LOWERCASE"]]
 
-characterData$c[ch_, "UnicodeUpperCaseQ", ___] :=
-	$c$characterBinaryProperty[ch, $c$CharacterPropertiesEnum["UPPERCASE"]];
+characterData$c[ch_, {"UnicodeUpperCaseQ", Automatic}] :=
+	$c$characterBinaryProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["UPPERCASE"]]
 
-characterData$c[ch_, "UnicodeVersion", ___] :=
-	$c$characterAge[ch];
+characterData$c[ch_, {"UnicodeVersion", Automatic}] :=
+	$c$characterAge @ ch
 
-characterData$c[ch_, "UnicodeVersion", "Date", ___] :=
-	Replace[$c$characterAge[ch], $UnicodeVersionMap];
+characterData$c[ch_, {"UnicodeVersion", "Date"}] :=
+	Replace[$c$characterAge[ch], $UnicodeVersionMap]
 
-characterData$c[ch_, "UpperCase", ___] :=
-	FromCharacterCode[$c$characterCharProperty[ch, $c$CharacterPropertiesEnum["SIMPLE_UPPERCASE_MAPPING"]]];
+characterData$c[ch_, {"UpperCase", Automatic}] :=
+	FromCharacterCode @ $c$characterCharProperty[
+		ch,
+		Evaluate @ $c$CharacterPropertiesEnum["SIMPLE_UPPERCASE_MAPPING"]]
 
-characterData$c[ch_, "UpperCaseQ", ___] :=
-	$c$characterJavaTestProperty[ch, 14];
+characterData$c[ch_, {"UpperCaseQ", Automatic}] :=
+	$c$characterJavaTestProperty[ch, 14]
 	
 (*
 characterData$c[ch_, "WhiteSpaceQ", t : ("CPOSIX" | "ICU" | "Java" | "Unicode") : "ICU"] :=
 	$c$characterWhitespaceTestProperty[ch, Switch[t, "CPOSIX", 4, "ICU", 1, "Java", 2, "Unicode", 0]];
 *)
-characterData$c[ch_, "WhiteSpaceQ", ___] :=
+characterData$c[ch_, {"WhiteSpaceQ", Automatic}] :=
 	$c$characterWhitespaceTestProperty[ch, 1]
 
 characterData$c[___] :=
-	Missing["NotAvailable"];
+	Missing["NotAvailable"]
