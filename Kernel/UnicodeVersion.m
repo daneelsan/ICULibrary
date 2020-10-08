@@ -2,17 +2,11 @@
 
 Package["ICULibrary`"]
 
-
 PackageScope["$UnicodeVersionMap"]
-
-
 PackageScope["CurrentUnicodeVersion"]
 
 
-(* ::Subsubsection::Closed:: *)
-(*$UnicodeVersionMap*)
-
-
+(* $UnicodeVersionMap *)
 $UnicodeVersionMap = MapAt[DateObject, {
 	{ 0, 0, 0, 0} -> {1991, 10},
 	{ 1, 1, 0, 0} -> {1993, 6},
@@ -39,13 +33,8 @@ $UnicodeVersionMap = MapAt[DateObject, {
 	{12, 1, 0, 0} -> {2019, 5, 7},
 	{13, 0, 0, 0} -> {2020, 3, 10}}, {All, 2}];
 
-
-(* ::Subsubsection::Closed:: *)
-(*CurrentUnicodeVersion*)
-
-
+(* CurrentUnicodeVersion *)
 $libraryFile = FindLibrary["libICULibrary"];
-
 
 $c$getUnicodeVersion = If[$libraryFile =!= $Failed,
 	LibraryFunctionLoad[
@@ -54,7 +43,6 @@ $c$getUnicodeVersion = If[$libraryFile =!= $Failed,
 		{},
 		{Integer, 1}], (* version *)
 	$Failed];
-
 
 CurrentUnicodeVersion[] := $c$getUnicodeVersion[];
 CurrentUnicodeVersion["Date"] := CurrentUnicodeVersion[] /. $UnicodeVersionMap;
