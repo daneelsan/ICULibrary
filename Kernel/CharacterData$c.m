@@ -2,16 +2,11 @@
 
 Package["ICULibrary`"]
 
-
 PackageScope["characterData$c"]
 
 
-(* ::Subsubsection::Closed:: *)
-(*LibraryFunctionLoad*)
-
-
+(* LibraryFunction *)
 $libraryFile = FindLibrary["libICULibrary"];
-
 
 $c$characterName = If[$libraryFile =!= $Failed,
 	LibraryFunctionLoad[
@@ -102,15 +97,8 @@ $c$characterICUTestProperty = If[$libraryFile =!= $Failed,
 		"Boolean"], (* test *)
 	$Failed];
 
-
-(* ::Subsubsection::Closed:: *)
-(*ICU Enum*)
-
-
-(*
-	Source: "https://unicode-org.github.io/icu-docs/apidoc/dev/icu4c/uchar_8h.html#ae40d616419e74ecc7c80a9febab03199"
-*)
-	
+(* ICU Enums *)
+(** Source: https://unicode-org.github.io/icu-docs/apidoc/dev/icu4c/uchar_8h.html#ae40d616419e74ecc7c80a9febab03199 **)
 $c$CharacterPropertiesEnum = <|
 	(* BinaryPropertiesEnum *)
 	<|
@@ -249,11 +237,7 @@ $c$CharacterPropertiesEnum = <|
 	"SCRIPT_EXTENSIONS" -> 28672,
 	"OTHER_PROPERTY_LIMIT" -> 28673|>|>;
 
-
-(* ::Subsubsection:: *)
-(*utilities*)
-
-
+(* utilities *)
 validNameSubPattern = Automatic | "Date" | "Name" | "ShortName";
 
 nameChoice["ShortName"] = 0;
@@ -264,11 +248,7 @@ cleanResult[""] = Missing["NotAvailable"];
 cleanResult[-1.23456789`*^8] = Missing["NotApplicable"];
 cleanResult[x_] := x
 
-
-(* ::Subsubsection:: *)
-(*characterData$c*)
-
-
+(* characterData$c *)
 characterData$c[ch_, {"BaseCharQ", Automatic}] :=
 	$c$characterICUTestProperty[ch, 2];
 	
