@@ -88,7 +88,7 @@ $c$characterProperties = {
 	"UnicodeVersion",
 	"UpperCase",
 	"UpperCaseQ",
-	"WhitespaceQ"};
+	"WhiteSpaceQ"};
 
 $characterProperties = Join[$c$characterProperties, {}];
 $characterPropertyPattern := $characterPropertyPattern = Alternatives @@ $characterProperties;
