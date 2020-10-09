@@ -1,3 +1,3 @@
 <|
-  "Checkpoint" -> "8d774fe780c456ed31ab48c12a32339ea5c6428d"
+  "Checkpoint" -> "6d02dc501658e1e882a5ed945c664138c9deab8a"
 |>
