@@ -128,24 +128,24 @@
 
       VerificationTest[
         CharacterData[Range[1000, 1005], "LetterQ"],
-        {True, True, True, True, True, True} 
+        {True, True, True, True, True, True}
       ],
 
       VerificationTest[
         CharacterData[Range[1000, 1005], "LetterQ", Automatic],
-        {True, True, True, True, True, True} 
+        {True, True, True, True, True, True}
       ],
 
       VerificationTest[
         CharacterData[CharacterRange[1000, 1014], "LetterQ"],
-        {True, True, True, True, True, True, True, True, True, True, True, True, True, True, False} 
+        {True, True, True, True, True, True, True, True, True, True, True, True, True, True, False}
       ],
 
       VerificationTest[
         CharacterData[Range[1000, 1014], "LetterQ", Automatic],
-        {True, True, True, True, True, True, True, True, True, True, True, True, True, True, False} 
+        {True, True, True, True, True, True, True, True, True, True, True, True, True, True, False}
       ],
- 
+
       VerificationTest[
         CharacterData[CharacterRange[1000, 1005], "ExtendedName", "Date"],
         {Missing["NotAvailable"], Missing["NotAvailable"],  Missing["NotAvailable"], \
@@ -495,4 +495,4 @@
 
     }
   |>
-|>
+|>;

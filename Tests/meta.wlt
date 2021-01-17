@@ -7,40 +7,44 @@
       ];
     ),
     "tests" -> {
+      exports = Lookup[Package`PackageInformation["ICULibrary`"], "PackageExports"];
+
       (* All public symbols have usage message *)
 
+      hasNoSymbolUsageQ = Function[symbol,
+        Not @ StringQ @ MessageName[symbol, "usage"], HoldFirst];
       VerificationTest[
-        AllTrue[
-          ReleaseHold[{Function[symbol, MessageName[symbol, "usage"], HoldFirst] /@
-            ("PackageExports" /. Package`PackageInformation["ICULibrary`"])}],
-          StringQ]
+        Select[exports, hasNoSymbolUsageQ],
+        HoldComplete[]
       ],
 
       (* All public symbols have syntax information *)
+      (* Additionally, SyntaxInformation should specify "OptionNames" if the symbol has Options. *)
 
+      hasSyntaxInformationQ = Function[
+        symbol,
+        Or[
+          StringStartsQ[SymbolName @ Unevaluated @ symbol, "$"],
+          And[
+            SyntaxInformation[Unevaluated @ symbol] =!= {},
+            Implies[
+              Options[Unevaluated @ symbol] =!= {},
+              ListQ[Lookup[SyntaxInformation[Unevaluated @ symbol], "OptionNames"]]]]],
+        HoldFirst];
       VerificationTest[
-        AllTrue[
-          ReleaseHold[{Function[
-              symbol,
-              {SymbolName[Unevaluated[symbol]], SyntaxInformation[symbol]},
-              HoldFirst] /@
-            ("PackageExports" /. Package`PackageInformation["ICULibrary`"])}],
-          If[StringStartsQ[#[[1]], "$"], #[[2]] === {}, #[[2]] =!= {}] &]
+        Complement[exports, Select[exports, hasSyntaxInformationQ]],
+        HoldComplete[]
       ],
 
       (* Test coverage: all public symbols appear in unit tests *)
-
-      With[{testsDirectory = $testsDirectory}, VerificationTest[
-        AllTrue[
-          ReleaseHold[{Function[
-              symbol,
-              SymbolName[Unevaluated[symbol]],
-              HoldFirst] /@
-            ("PackageExports" /. Package`PackageInformation["ICULibrary`"])}],
-          StringContainsQ[StringJoin[Import[
-            FileNameJoin[Append[FileNameSplit @ testsDirectory, "*.wlt"]],
-            "Text"]], #] &]
-      ]]
+      allTestsCode = StringJoin[FileString /@ FileNames["*.wlt", $testsDirectory]];
+      doesNotAppearInTestsQ = Function[symbol,
+        !StringContainsQ[allTestsCode, SymbolName @ Unevaluated @ symbol],
+        HoldFirst];
+      VerificationTest[
+        Select[exports, doesNotAppearInTestsQ],
+        HoldComplete[]
+      ]
     }
   |>
-|>
+|>;
