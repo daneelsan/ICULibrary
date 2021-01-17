@@ -1,5 +1,7 @@
 Package["ICULibrary`"]
 
+PackageImport["GeneralUtilities`"]
+
 PackageScope["testUnevaluated"]
 PackageScope["testSymbolLeak"]
 
@@ -29,4 +31,3 @@ testSymbolLeak[testHead_, expr_, opts___] :=
     0,
     opts
   ];
-
