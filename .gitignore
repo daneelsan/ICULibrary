@@ -1,11 +1,43 @@
+# Mathematica notebooks
+
+*.nb
+
+# Sublime text
+
+*.sublime-workspace
+
+# VS Code
+
+*.code-workspace
+
+# Files specifically requesting to be ignored
+
+ignoreme.*
+
+# Xcode
+
+xcuserdata/
+
 # macOS
 
 .DS_Store
 
-# Build directory
+# In-place build artifacts
 
-Build/
+LibraryResources/
 
 # Built paclets
 
-*.paclet
+BuiltPaclets/
+
+# CMake build directory
+
+build/
+
+# Test result XMLs
+
+TestResults/
+
+# Test results
+
+exit_status.txt
