@@ -8,7 +8,7 @@ Options[PackICULibrary] = {
   "RepositoryDirectory" :> $ICULibraryRoot, (* for Git SHAs etc *)
   "SourceDirectory" -> Automatic, (* for WL sources *)
   "LibraryDirectory" -> Automatic, (* for libICULibrary *)
-  "MasterBranch" -> "master", (* for calculating the minor version *)
+  "MasterBranch" -> "main", (* for calculating the minor version *)
   "OutputDirectory" -> Automatic,
   "Verbose" -> False
 };
