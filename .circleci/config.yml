@@ -6,12 +6,6 @@ orbs:
 
 jobs:
   wolfram-language-paclet-test:
-    docker:
-      - image: maxitg/icu-library-wl-ci:12.1.1
-        auth:
-          username: daniels
-          password: $DOCKERHUB_PASSWORD
-
     steps:
       - checkout
 
