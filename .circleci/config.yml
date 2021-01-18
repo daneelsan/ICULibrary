@@ -3,12 +3,63 @@
 version: 2.1
 # Use a package of configuration called an orb.
 orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
-# Orchestrate or schedule a set of jobs
+
+jobs:
+  wolfram-language-paclet-test:
+    docker:
+      - image: maxitg/icu-library-wl-ci:12.1.1
+        auth:
+          username: daniels
+          password: $DOCKERHUB_PASSWORD
+
+    steps:
+      - checkout
+
+      - run:
+          name: Build
+          command: ./build.wls
+
+      - store_artifacts:
+          path: ./LibraryResources/
+
+      - attach_workspace:
+          at: /tmp/workspace
+
+      - run:
+          name: Copy libraries from other platforms
+          command: cp -r /tmp/workspace/* ./LibraryResources/
+
+      - run:
+          name: Install
+          command: ./install.wls
+
+      - store_artifacts:
+          path: ./BuiltPaclets/
+
+      - run:
+          name: Reinstall
+          command: ./install.wls
+
+      - run:
+          name: Test
+          command: |
+            if [ $CIRCLE_NODE_INDEX -eq 2 ]
+            then
+              testsToRun=matching
+            elif [ $CIRCLE_NODE_INDEX -eq 3 ]
+            then
+              testsToRun=CharacterData
+            else
+              testsToRun=$(circleci tests glob "Tests/*.wlt" \
+                | sed "/Tests\/CharacterData.wlt/d" \
+                | circleci tests split --total=2 --split-by=filesize \
+                | sed "s/\.wlt//" \
+                | sed "s/Tests\///")
+            fi
+            ./.circleci/test.sh $testsToRun
+
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  version: 2
+  build-and-test:
     jobs:
-      - welcome/run
+      - wolfram-language-paclet-test
