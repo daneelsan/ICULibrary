@@ -149,7 +149,7 @@
       VerificationTest[
         CharacterData[CharacterRange[1000, 1005], "ExtendedName", "Date"],
         {Missing["NotAvailable"], Missing["NotAvailable"],  Missing["NotAvailable"], \
-	Missing["NotAvailable"], Missing["NotAvailable"], Missing["NotAvailable"]}
+  Missing["NotAvailable"], Missing["NotAvailable"], Missing["NotAvailable"]}
       ],
 
       (** List of properties **)
@@ -495,4 +495,4 @@
 
     }
   |>
-|>;
+|>

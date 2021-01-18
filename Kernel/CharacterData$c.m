@@ -146,7 +146,7 @@ $libraryFunctions = {
       "Boolean"] (* test *)
   ,
     $Failed
-  ],
+  ]
 };
 
 (* ICU Enums *)

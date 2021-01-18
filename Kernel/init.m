@@ -26,7 +26,7 @@ Block[
     HoldPattern[ReturnFailed[msg_String, args___]] :> ReturnFailed[MessageName[$LHSHead, msg], args],
     HoldPattern[ReturnFailure[msg_String, args___]] :> ReturnFailure[MessageName[$LHSHead, msg], args]
   }},
-  Get[FileNameJoin[{$ICULibraryRootDirectory, "Kernel", "utilities.m"}]];
+  Get[FileNameJoin[{$ICULibraryRootDirectory, "Kernel", "globals.m"}]];
 ];
 
 End[];

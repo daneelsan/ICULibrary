@@ -1,10 +1,10 @@
 ---
-Language: C
+Language: Cpp
 BasedOnStyle: Google
 AllowShortIfStatementsOnASingleLine: Always
 BinPackArguments: false
 BinPackParameters: false
 ColumnLimit: 120
 DerivePointerAlignment: false
-Standard: c11
+Standard: c++11
 ...
